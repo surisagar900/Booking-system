@@ -4,4 +4,4 @@
 install node.js
 
 ###step -2
-wamp or xampp
+wamp or  xampp
