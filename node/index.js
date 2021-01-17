@@ -152,3 +152,30 @@ app.post('/signup' , (req,res)=>{
         })
     })
     
+ app.post('/booking' , (req,res)=>{
+        var movie = req.body.movie;
+        var id = req.body.id;
+        var seat = req.body.seat;
+        var name = req.body.name;
+        var sql = `INSERT into book (movie,id,seat,name) values("${movie}","${id}","${seat}","${name}")`
+        db.query(sql,(err,data)=>{
+            if(data){
+                res.json("data added")
+            }
+            else
+            {
+                res.json('data not added')
+            }
+        })
+    })
+  app.get("/bookinghistory/:id" , (req,res)=>{
+    
+      db.query('SELECT * FROM book where id =?',[req.params.id],(err,data)=>{
+          if(data){
+              res.json(data)
+          }
+          else{
+              res.json('no such id')
+          }
+      })
+  })
