@@ -8,7 +8,7 @@ import { RegisterComponent } from './auth/register/register.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
@@ -20,6 +20,9 @@ import { AuthService } from './services/auth.service';
 import { HttpClientModule } from '@angular/common/http';
 import { MovieCardComponent } from './public/movie-card/movie-card.component';
 import { MovieDetailComponent } from './public/movie-detail/movie-detail.component';
+import { MatCardModule } from '@angular/material/card';
+import { BookMovieComponent } from './public/book-movie/book-movie.component';
+import { PrintTicketComponent } from './public/book-movie/print-ticket/print-ticket.component';
 
 @NgModule({
   declarations: [
@@ -32,11 +35,14 @@ import { MovieDetailComponent } from './public/movie-detail/movie-detail.compone
     FooterComponent,
     MovieCardComponent,
     MovieDetailComponent,
+    BookMovieComponent,
+    PrintTicketComponent,
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
     AppRoutingModule,
+    FormsModule,
     BrowserAnimationsModule,
     ReactiveFormsModule,
     MatFormFieldModule,
@@ -44,6 +50,7 @@ import { MovieDetailComponent } from './public/movie-detail/movie-detail.compone
     MatIconModule,
     MatInputModule,
     MatSelectModule,
+    MatCardModule,
   ],
   providers: [AuthService],
   bootstrap: [AppComponent],

@@ -17,4 +17,8 @@ export class MoviesService {
       .get<any>(this.movieUrl + 'trending/movie/week' + this.movieApiUrl)
       .pipe(map((it) => it.results));
   }
+
+  getMovieById(id: number) {
+    return this.http.get<any>(this.movieUrl + `movie/${id}` + this.movieApiUrl);
+  }
 }

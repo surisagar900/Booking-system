@@ -28,9 +28,10 @@ a:hover {
 
 .background {
   background-image: url("assets/auth-bg.jpg");
-  background-position: center;
-  background-repeat: repeat;
+  background-position: top;
+  background-repeat: no-repeat;
   background-size: cover;
+  height: 500px;
 }
 
 .bg-text {
@@ -39,4 +40,31 @@ a:hover {
   border: 3px solid #f1f1f1;
   border: 2px solid black;
   border-radius: 0px 15px 0px 15px;
+}
+
+mat-card {
+  position: relative;
+  top: 0;
+  height: 200px;
+  background-position: center;
+  background-size: cover;
+  color: white;
+  box-shadow: 2px 1px 7px 1px rgba(0, 0, 0, 0.3) !important;
+}
+mat-card:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  border-radius: 4px;
+  background-image: linear-gradient(transparent 50%, rgba(0, 0, 0, 0.9));
+}
+.text-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
 }

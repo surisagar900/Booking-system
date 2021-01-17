@@ -4,6 +4,7 @@ import { LoginComponent } from './auth/login/login.component';
 import { RegisterComponent } from './auth/register/register.component';
 import { HomeComponent } from './public/home/home.component';
 import { MainComponent } from './layout/main/main.component';
+import { BookMovieComponent } from './public/book-movie/book-movie.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -11,7 +12,10 @@ const routes: Routes = [
   {
     path: '',
     component: MainComponent,
-    children: [{ path: '', component: HomeComponent }],
+    children: [
+      { path: '', component: HomeComponent },
+      { path: ':movieId/book', component: BookMovieComponent },
+    ],
   },
 ];
 

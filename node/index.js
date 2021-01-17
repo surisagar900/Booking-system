@@ -121,30 +121,29 @@ app.post('/login', (req, res) => {
     db.query('SELECT*FROM users WHERE username = ? and password = ?', [username, password], (err, data) => {
         if (data.length > 0) {
             const token = jwt.sign({
-                //contactnumber:contactnumber,
-                //password:password
                 datas: data
             }, "TOKEN_SECRET=7bc78545b1a3923cc1e1e19523fd5c3f20b409509...", {
                 expiresIn: "1day"
             })
-            //token:token
             res.json({ id: data[0].id, token: token })
         }
         else {
-            res.status(401).json({ message: "login failed" })
+            res.status(401).json({ message: "Invalid credentials" })
         }
     })
 })
 
 app.post('/booking', (req, res) => {
     var movie = req.body.movie;
-    var id = req.body.id;
     var seat = req.body.seat;
     var name = req.body.name;
-    var sql = `INSERT into book (movie,id,seat,name) values("${movie}","${id}","${seat}","${name}")`
+    console.log(req.body);
+    var sql = `INSERT INTO book (movie,seat,name) values("${movie}","${seat}","${name}")`
     db.query(sql, (err, data) => {
+        console.log(data);
+        console.log(err);
         if (data) {
-            res.json("data added")
+            res.json("Movie booked!!")
         }
         else {
             res.status(400).json({ message: "data not added" })
