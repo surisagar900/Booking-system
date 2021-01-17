@@ -1,7 +1,7 @@
 const express = require('express')
 const jwt = require('jsonwebtoken')
 
-const mysql = require('mysql' )
+const mysql = require('mysql')
 const bodyparser = require('body-parser')
 const app = express()
 //app.use(json())
@@ -46,9 +46,8 @@ app.get('/user' , (req,res)=>{
         if(data){
             res.json(data)
         }
-        else{
-            res.json(err)
-        }
+        else{res.status(401).json({message: "error"}) 
+    }
     })
 })
 
@@ -56,23 +55,21 @@ app.get('/user' , (req,res)=>{
 
 app.get('/:id' , (req,res)=>{
     db.query('select * from users where id = ?',[req.params.id],(err,data)=>{
-        if(data){
+        if(data.length>0){
             res.json(data)
         }
-        else{
-            res.json(err)
-        }
+        else{res.status(400).json({message: "no user"}) 
+    }
     })
 })
 
 app.delete('/test/:id' , (req,res)=>{
     db.query('DELETE FROM users WHERE id =  ?',[req.params.id],(err,data)=>{
-        if(data){
+        if(data.length>0){
             res.json('data deleted')
         }
-        else{
-            res.json(err)
-        }
+        else{res.status(400).json({message: "not deleted"}) 
+                   }
     })
 })
 
@@ -94,10 +91,8 @@ app.post('/signup' , (req,res)=>{
                 res.json("data added")
                 
             } 
-            else{
-                res.json('not sucess')
-                console.log(err)
-            }
+            else{res.status(402).json({message: "unsucessfull"}) 
+                   }
         })
 
     })
@@ -119,10 +114,8 @@ app.post('/signup' , (req,res)=>{
                 res.json("data updated")
                 
             } 
-            else{
-                res.json('not sucess')
-                console.log(err)
-            }
+            else{res.status(400).json({message: "fail to update"}) 
+                   }
         })
 
     })
@@ -142,17 +135,19 @@ app.post('/signup' , (req,res)=>{
                     expiresIn : "1day"
                 })
                   //token:token
-                 res.json( {data:data[0].firstname,token:token})
+                 res.json( {firstname:data[0].firstname,token:token})
+                
                
                  
              
             }
            
-            else{res.json('login failed')}
+           else{res.status(401).json({message: "login failed"}) 
+                   }
         })
     })
     
- app.post('/booking' , (req,res)=>{
+    app.post('/booking' , (req,res)=>{
         var movie = req.body.movie;
         var id = req.body.id;
         var seat = req.body.seat;
@@ -162,20 +157,17 @@ app.post('/signup' , (req,res)=>{
             if(data){
                 res.json("data added")
             }
-            else
-            {
-                res.json('data not added')
-            }
+            else{res.status(400).json({message: "data not added"}) 
+        }
         })
     })
   app.get("/bookinghistory/:id" , (req,res)=>{
     
       db.query('SELECT * FROM book where id =?',[req.params.id],(err,data)=>{
-          if(data){
+          if(data.length>0){
               res.json(data)
           }
-          else{
-              res.json('no such id')
-          }
+          else{res.status(400).json({message: "no such id"}) 
+                   }
       })
   })
