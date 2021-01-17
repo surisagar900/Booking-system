@@ -1,0 +1,11 @@
+<div class="card mb-4">
+  <div
+    class="poster"
+    [style.background-image]="'url(' + imageUrl + movieData.poster_path + ')'"
+  ></div>
+  <div class="card-body">
+    <h2 class="card-title">{{ movieData.title }}</h2>
+    <p class="card-text">{{ movieData.overview | slice: 0:70 }} ...</p>
+    <a href="#" class="btn btn-primary">Go somewhere</a>
+  </div>
+</div>

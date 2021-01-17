@@ -1,0 +1,8 @@
+.poster {
+  background-position: top;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-clip: content-box;
+  background-origin: content-box;
+  height: 250px;
+}
