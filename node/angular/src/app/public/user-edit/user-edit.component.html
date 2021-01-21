@@ -1,0 +1,165 @@
+<div class="col-md-8 p-5">
+  <form (ngSubmit)="onSubmit()" [formGroup]="RegisterForm">
+    <div class="row">
+      <mat-form-field class="col-12 mb-2" appearance="outline">
+        <mat-label>Username</mat-label>
+        <input
+          required
+          formControlName="username"
+          matInput
+          placeholder="Enter username"
+        />
+        <mat-icon matSuffix>account_circle</mat-icon>
+        <mat-hint>
+          Username should contains a-z,0-9 only and 6 to 25 characters long.
+        </mat-hint>
+        <mat-error
+          *ngIf="
+            !RegisterForm.get('username').hasError('required') &&
+            RegisterForm.get('username').errors
+          "
+        >
+          <p>Enter a valid username</p>
+        </mat-error>
+        <mat-error *ngIf="RegisterForm.get('username').hasError('required')">
+          <p>Username is required</p>
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="col-12 mb-2" appearance="outline">
+        <mat-label>First Name</mat-label>
+        <input
+          required
+          formControlName="firstname"
+          matInput
+          placeholder="Enter first name"
+        />
+        <mat-icon matSuffix>create</mat-icon>
+        <mat-error
+          *ngIf="
+            !RegisterForm.get('firstname').hasError('required') &&
+            RegisterForm.get('firstname').errors
+          "
+        >
+          <p>No numbers and spaces</p>
+        </mat-error>
+        <mat-error *ngIf="RegisterForm.get('firstname').hasError('required')">
+          <p>First name is required</p>
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="col-12 mb-2" appearance="outline">
+        <mat-label>Last Name</mat-label>
+        <input
+          required
+          formControlName="lastname"
+          matInput
+          placeholder="Enter last name"
+        />
+        <mat-icon matSuffix>create</mat-icon>
+        <mat-error
+          *ngIf="
+            !RegisterForm.get('lastname').hasError('required') &&
+            RegisterForm.get('lastname').errors
+          "
+        >
+          <p>No numbers and spaces</p>
+        </mat-error>
+        <mat-error *ngIf="RegisterForm.get('lastname').hasError('required')">
+          <p>Last name is required</p>
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="col-12 mb-2" appearance="outline">
+        <mat-label>Email</mat-label>
+        <input
+          required
+          formControlName="email"
+          matInput
+          placeholder="Enter email"
+        />
+        <mat-icon matSuffix>alternate_email</mat-icon>
+        <mat-hint>e.g. example@example.com</mat-hint>
+        <mat-error
+          *ngIf="
+            RegisterForm.get('email').hasError('email') &&
+            !RegisterForm.get('email').hasError('required')
+          "
+        >
+          <p>Enter a valid email address</p>
+        </mat-error>
+        <mat-error *ngIf="RegisterForm.get('email').hasError('required')">
+          <p>Email is required</p>
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="col-12 mb-2" appearance="outline">
+        <mat-label>Phone Number</mat-label>
+        <input
+          type="number"
+          required
+          formControlName="phone"
+          matInput
+          placeholder="Enter Phone Number"
+        />
+        <mat-icon matSuffix>phone_enabled</mat-icon>
+        <mat-error
+          *ngIf="
+            !RegisterForm.get('phone').hasError('required') &&
+            RegisterForm.get('phone').errors
+          "
+        >
+          <p>10 digits long</p>
+        </mat-error>
+        <mat-error *ngIf="RegisterForm.get('phone').hasError('required')">
+          <p>Phone Number is required</p>
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="col-12 mb-2" appearance="outline">
+        <mat-label>Password</mat-label>
+        <input
+          formControlName="password"
+          matInput
+          [type]="hide ? 'password' : 'text'"
+          placeholder="Enter password"
+        />
+        <button (click)="hide = !hide" type="button" mat-icon-button matSuffix>
+          <mat-icon>{{ hide ? "visibility_off" : "visibility" }}</mat-icon>
+        </button>
+
+        <mat-hint>
+          Password can contains a-z,A-Z,0-9,@,*,# only and 8 to 20 characters
+          long.
+        </mat-hint>
+        <mat-error
+          *ngIf="
+            !RegisterForm.get('password').hasError('required') &&
+            RegisterForm.get('password').errors
+          "
+        >
+          <p>should match the pattern</p>
+        </mat-error>
+        <mat-error *ngIf="RegisterForm.get('password').hasError('required')">
+          <p>Password is required</p>
+        </mat-error>
+      </mat-form-field>
+
+      <p class="col-12 text-danger text-center" *ngIf="errors">
+        {{ errors }}
+      </p>
+
+      <div class="col-12">
+        <button
+          class="col-12"
+          mat-raised-button
+          color="primary"
+          type="submit"
+          [disabled]="RegisterForm.invalid || loading"
+        >
+          <span> Save </span>
+        </button>
+      </div>
+    </div>
+  </form>
+</div>

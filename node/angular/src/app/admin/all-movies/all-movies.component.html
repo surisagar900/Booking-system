@@ -1,0 +1,28 @@
+<table class="table table-striped table-bordered table-hover table-responsive">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">MovieId</th>
+      <th scope="col">Title</th>
+      <th scope="col">Director</th>
+      <th scope="col">Genre</th>
+      <th scope="col">Language</th>
+      <th scope="col">Release Year</th>
+      <th scope="col">Return Days</th>
+      <th scope="col">Fine after free</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let item of allMoviesData; let i = index">
+      <th scope="row">{{ i + 1 }}</th>
+      <td>{{ item.moviesId }}</td>
+      <td>{{ item.title | titlecase }}</td>
+      <td>{{ item.director | titlecase }}</td>
+      <td>{{ item.genre | titlecase }}</td>
+      <td>{{ item.language | titlecase }}</td>
+      <td>{{ item.releaseYear }}</td>
+      <td>{{ item.returnDays }}</td>
+      <td>{{ item.fine | currency: "INR" }}</td>
+    </tr>
+  </tbody>
+</table>

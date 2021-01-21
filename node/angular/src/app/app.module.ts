@@ -23,6 +23,28 @@ import { MovieDetailComponent } from './public/movie-detail/movie-detail.compone
 import { MatCardModule } from '@angular/material/card';
 import { BookMovieComponent } from './public/book-movie/book-movie.component';
 import { PrintTicketComponent } from './public/book-movie/print-ticket/print-ticket.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
+import { SideNavComponent } from './dashboard/side-nav/side-nav.component';
+import { UserDetailComponent } from './dashboard/user-detail/user-detail.component';
+import { AllUsersComponent } from './admin/all-users/all-users.component';
+import { AddMovieComponent } from './admin/add-movie/add-movie.component';
+import { AllMoviesComponent } from './admin/all-movies/all-movies.component';
+import {
+  MatRippleModule,
+  MAT_RIPPLE_GLOBAL_OPTIONS,
+  RippleGlobalOptions,
+} from '@angular/material/core';
+import { UserEditComponent } from './public/user-edit/user-edit.component';
+import { UserBookingComponent } from './public/user-booking/user-booking.component';
+import { AllBookingsComponent } from './admin/all-bookings/all-bookings.component';
+
+const globalRippleConfig: RippleGlobalOptions = {
+  disabled: false,
+  animation: {
+    enterDuration: 300,
+    exitDuration: 0,
+  },
+};
 
 @NgModule({
   declarations: [
@@ -37,6 +59,15 @@ import { PrintTicketComponent } from './public/book-movie/print-ticket/print-tic
     MovieDetailComponent,
     BookMovieComponent,
     PrintTicketComponent,
+    DashboardComponent,
+    SideNavComponent,
+    UserDetailComponent,
+    AllUsersComponent,
+    AddMovieComponent,
+    AllMoviesComponent,
+    UserEditComponent,
+    UserBookingComponent,
+    AllBookingsComponent,
   ],
   imports: [
     BrowserModule,
@@ -51,8 +82,12 @@ import { PrintTicketComponent } from './public/book-movie/print-ticket/print-tic
     MatInputModule,
     MatSelectModule,
     MatCardModule,
+    MatRippleModule,
   ],
-  providers: [AuthService],
+  providers: [
+    AuthService,
+    { provide: MAT_RIPPLE_GLOBAL_OPTIONS, useValue: globalRippleConfig },
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

@@ -9,6 +9,13 @@ app.use(bodyparser.urlencoded({ extended: false }))
 app.use(bodyparser.json())
 app.use(cors());
 
+// we need to enter time for how long token exist, and here convert time into ms
+const tokenExpiresInMiliSeconds = 86400000 + 'ms'; // equals to 1 day
+const userRole = {
+    public: 1,
+    admin: 2
+}
+
 const db = mysql.createConnection({
     host: "localhost",
     user: "root",
@@ -26,6 +33,8 @@ app.listen(3000, () => {
     console.log("we are live on port")
 })
 
+//---------------------------------------------------------------------------------------------------------------------
+// Get All Users
 app.get('/user', (req, res) => {
     db.query('select * from users', (err, data) => {
         if (data) {
@@ -37,7 +46,9 @@ app.get('/user', (req, res) => {
     })
 })
 
-app.get('/:id', (req, res) => {
+//---------------------------------------------------------------------------------------------------------------------
+// Get Specific User
+app.get('user/:id', (req, res) => {
     db.query('select * from users where id = ?', [req.params.id], (err, data) => {
         if (data.length > 0) {
             res.json(data)
@@ -48,7 +59,9 @@ app.get('/:id', (req, res) => {
     })
 })
 
-app.delete('/test/:id', (req, res) => {
+//---------------------------------------------------------------------------------------------------------------------
+// Delete Specific User
+app.delete('user/:id', (req, res) => {
     db.query('DELETE FROM users WHERE id =  ?', [req.params.id], (err, data) => {
         if (data.length > 0) {
             res.json('data deleted')
@@ -59,6 +72,8 @@ app.delete('/test/:id', (req, res) => {
     })
 })
 
+//---------------------------------------------------------------------------------------------------------------------
+// Add User
 app.post('/signup', (req, res) => {
     var id = req.body.id;
     var username = req.body.username;
@@ -78,10 +93,10 @@ app.post('/signup', (req, res) => {
                         const token = jwt.sign({
                             datas: data[0]
                         }, "TOKEN_SECRET=7bc78545b1a3923cc1e1e19523fd5c3f20b409509...", {
-                            expiresIn: "1day"
+                            expiresIn: tokenExpiresInMiliSeconds
                         })
                         //token:token
-                        res.json({ id: data[0].id, token: token })
+                        res.json({ id: data[0].id, token: token, expiresIn: tokenExpiresInMiliSeconds, role: userRole.public })
                     })
 
                 }
@@ -96,7 +111,9 @@ app.post('/signup', (req, res) => {
     })
 })
 
-app.put('/update/:id', (req, res) => {
+//---------------------------------------------------------------------------------------------------------------------
+// Update Specific User
+app.put('user/:id', (req, res) => {
     var id = req.params.id;
     var username = req.body.username;
     var firstname = req.body.firstname;
@@ -115,6 +132,8 @@ app.put('/update/:id', (req, res) => {
     })
 })
 
+//---------------------------------------------------------------------------------------------------------------------
+// Login Public User
 app.post('/login', (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
@@ -123,9 +142,9 @@ app.post('/login', (req, res) => {
             const token = jwt.sign({
                 datas: data
             }, "TOKEN_SECRET=7bc78545b1a3923cc1e1e19523fd5c3f20b409509...", {
-                expiresIn: "1day"
+                expiresIn: tokenExpiresInMiliSeconds
             })
-            res.json({ id: data[0].id, token: token })
+            res.json({ id: data[0].id, token: token, expiresIn: tokenExpiresInMiliSeconds, role: userRole.public })
         }
         else {
             res.status(401).json({ message: "Invalid credentials" })
@@ -133,6 +152,8 @@ app.post('/login', (req, res) => {
     })
 })
 
+//---------------------------------------------------------------------------------------------------------------------
+// Book Movie
 app.post('/booking', (req, res) => {
     var movie = req.body.movie;
     var seat = req.body.seat;
@@ -151,6 +172,8 @@ app.post('/booking', (req, res) => {
     })
 })
 
+//---------------------------------------------------------------------------------------------------------------------
+// get booking history
 app.get("/bookinghistory/:id", (req, res) => {
     db.query('SELECT * FROM book where id =?', [req.params.id], (err, data) => {
         if (data.length > 0) {
@@ -162,47 +185,37 @@ app.get("/bookinghistory/:id", (req, res) => {
     })
 })
 
- //---------------------------------------------------------------------------------------------------------------------
-  // signup and login api for admin
-  app.post("/adminsignup" , (req,res)=>{
+//---------------------------------------------------------------------------------------------------------------------
+// signup and login api for admin
+app.post("/adminsignup", (req, res) => {
     var username = req.body.username;
     var password = req.body.password;
     var sql = `INSERT into admin(username,password)values("${username}","${password}")`
-    db.query(sql,(err,data)=>{
-        if(data){
+    db.query(sql, (err, data) => {
+        if (data) {
             res.json('admin created')
         }
-        else{
-            res.status(400).json({message:"data added"})
+        else {
+            res.status(400).json({ message: "data added" })
         }
-    }) 
+    })
 })
-app.post("/adminlogin" , (req,res)=>{
-    var username = req.body.username;
-    var password= req.body.password;
-    db.query('SELECT*FROM admin WHERE username = ? and password = ?',[username,password],(err,data)=>{
 
-        if(data.length>0){
-          
-          const token = jwt.sign({
-              //contactnumber:contactnumber,
-              //password:password
-            datas:data
-            
-            
-           },"TOKEN_SECRET=7bc78545b1a3923cc1e1e19523fd5c3f20b409509...",{
-              expiresIn : "1day"
-          })
+app.post("/adminlogin", (req, res) => {
+    var username = req.body.username;
+    var password = req.body.password;
+    db.query('SELECT*FROM admin WHERE username = ? and password = ?', [username, password], (err, data) => {
+        if (data.length > 0) {
+            const token = jwt.sign({
+                datas: data
+            }, "TOKEN_SECRET=7bc78545b1a3923cc1e1e19523fd5c3f20b409509...", {
+                expiresIn: tokenExpiresInMiliSeconds
+            })
             //token:token
-           res.json( {username:data[0].username,token:token})
-          
-         
-           
-       
-      }
-        
-        else{
-            res.status(400).json({message:"no such user exists"})
+            res.json({ id: data[0].id, token: token, expiresIn: tokenExpiresInMiliSeconds, role: userRole.admin })
+        }
+        else {
+            res.status(400).json({ message: "no such admin exists" })
             console.log(err)
         }
     })

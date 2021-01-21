@@ -1,6 +1,6 @@
 <app-print-ticket
   [movieData]="{
-    seat: selectedSeat,
+    seat: selectedSeats.join(', '),
     title: movie.title,
     tagline: movie.tagline
   }"
@@ -40,29 +40,31 @@
         <div class="card-header">Select your seat</div>
         <div class="card-body">
           <h5 class="card-title">Screen this side</h5>
-          <p class="card-text">
+          <div class="card-text">
             <ng-container *ngFor="let col of seatColumn">
               <ng-container *ngFor="let row of seatRow">
-                <span
-                  role="button"
-                  class="nav-btn p-2"
+                <button
+                  mat-ripple
+                  class="seat-button"
                   (click)="selectSeat(col, row)"
-                  [ngClass]="{ selected: selectedSeat == col + row }"
+                  [ngClass]="{ selected: checkSelectedSeat(col + row) }"
                 >
-                  <mat-icon>event_seat</mat-icon>
-                  <span class="mat-h5 m-0 p-0"> {{ col }}{{ row }} </span>
-                </span>
+                  <p>
+                    <mat-icon>event_seat</mat-icon><br />
+                    {{ col }}{{ row }}
+                  </p>
+                </button>
               </ng-container>
               <hr />
               <br />
             </ng-container>
-          </p>
+          </div>
         </div>
         <div class="card-footer">
           <button
             role="button"
-            mat-flat-button
-            [disabled]="selectedSeat == null"
+            mat-raised-button
+            [disabled]="selectedSeats.length == 0"
             color="primary"
             class="w-100"
             (click)="bookSeat()"

@@ -39,14 +39,23 @@ export class BookMovieComponent implements OnInit {
     });
   }
 
-  selectedSeat: string = null;
   isTicketBooked: boolean = false;
+
+  selectedSeats: string[] = [];
 
   selectSeat(seatCol: string, seatRow: number) {
     let seat = seatCol + seatRow;
-    this.selectedSeat != seat
-      ? (this.selectedSeat = seat)
-      : (this.selectedSeat = null);
+    let seatIndex = this.selectedSeats.indexOf(seat);
+    if (seatIndex != -1) {
+      this.selectedSeats.splice(seatIndex, 1);
+    } else {
+      this.selectedSeats.push(seat);
+    }
+  }
+
+  checkSelectedSeat(seat: string): boolean {
+    let seatIndex = this.selectedSeats.indexOf(seat);
+    return seatIndex == -1 ? false : true;
   }
 
   bookSeat() {
@@ -56,8 +65,9 @@ export class BookMovieComponent implements OnInit {
       return;
     }
 
+    let seats = this.selectedSeats.join(',');
     this.bookService
-      .bookSeat(+userId, this.movie.title, this.selectedSeat, '' + userId)
+      .bookSeat(+userId, this.movie.title, seats, '' + userId)
       .subscribe(
         (res) => {
           window.alert(res);

@@ -12,12 +12,9 @@
 
 <mat-card
   [style.background-image]="'url(' + imageUrl + movieData.poster_path + ')'"
-  class="mb-4"
+  class="mb-4 movie-card"
 >
-  <div
-    class="text-overlay p-2"
-    [style.background-color]="'rgba(255,255,255,0.6)'"
-  >
+  <div class="text-overlay p-2">
     <div class="d-flex flex-column justify-content-end flex-nowrap h-100 w-100">
       <div class="d-flex justify-content-between align-items-end">
         <h2 class="mat-h2 m-0">{{ movieData.title | titlecase }}</h2>

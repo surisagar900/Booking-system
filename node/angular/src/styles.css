@@ -34,6 +34,20 @@ a:hover {
   height: 500px;
 }
 
+hr {
+  background-color: rgba(0, 0, 0, 0.4);
+  border-radius: 10px;
+  margin: 0;
+}
+
+.divider {
+  background-color: rgba(0, 0, 0, 0.4);
+  border-radius: 10px;
+  margin: 0;
+  height: auto;
+  min-width: 1px;
+}
+
 .bg-text {
   background-color: rgb(255, 255, 255); /* Fallback color */
   font-weight: bold;
@@ -42,24 +56,19 @@ a:hover {
   border-radius: 0px 15px 0px 15px;
 }
 
-mat-card {
+.only-card {
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+}
+
+.movie-card {
   position: relative;
   top: 0;
-  height: 200px;
-  background-position: center;
-  background-size: cover;
-  color: white;
+  min-height: 200px;
+  background-position: top;
+  background-size: inherit;
+  background-repeat: no-repeat;
   box-shadow: 2px 1px 7px 1px rgba(0, 0, 0, 0.3) !important;
-}
-mat-card:before {
-  content: "";
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  border-radius: 4px;
-  background-image: linear-gradient(transparent 50%, rgba(0, 0, 0, 0.9));
 }
 .text-overlay {
   position: absolute;
@@ -67,4 +76,39 @@ mat-card:before {
   left: 0;
   bottom: 0;
   right: 0;
+  color: white;
+  background-image: linear-gradient(transparent 30%, rgba(0, 0, 0));
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.seat-button {
+  border: 2px dashed white;
+  background-color: transparent;
+  border-radius: 50%;
+  padding: 0;
+  margin: 5px;
+}
+
+.seat-button p {
+  border-radius: 50%;
+  margin: 2px;
+  width: 50px;
+  height: 50px;
+}
+
+.selected {
+  border: 2px dashed rgb(255, 31, 15);
+}
+.selected p {
+  background-color: rgba(146, 143, 143, 0.781);
+}
+
+* {
+  outline-style: none;
+  outline-width: 0;
+  outline-color: transparent;
+  outline-offset: 0;
+}
+button:focus {
+  outline: none;
 }

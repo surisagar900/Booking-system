@@ -1,0 +1,64 @@
+<div class="list-group list-group-flush">
+  <!-- common -->
+  <a
+    matRipple
+    [routerLink]="['./']"
+    routerLinkActive="active"
+    [routerLinkActiveOptions]="{ exact: true }"
+    class="list-group-item list-group-item-action"
+  >
+    View Profile
+  </a>
+
+  <!-- public -->
+  <ng-container>
+    <hr />
+    <a
+      matRipple
+      [routerLink]="['./bookings']"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }"
+      class="list-group-item list-group-item-action"
+    >
+      Booking History
+    </a>
+    <a
+      matRipple
+      [routerLink]="['./edit']"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }"
+      class="list-group-item list-group-item-action"
+    >
+      Edit Profile
+    </a>
+  </ng-container>
+
+  <!-- admin -->
+  <ng-container>
+    <hr />
+    <a
+      matRipple
+      [routerLink]="['./users']"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }"
+      class="list-group-item list-group-item-action"
+      >View All Users</a
+    >
+    <a
+      matRipple
+      [routerLink]="['./movie/add']"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }"
+      class="list-group-item list-group-item-action"
+      >Add Movies</a
+    >
+    <a
+      matRipple
+      [routerLink]="['./movie']"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }"
+      class="list-group-item list-group-item-action"
+      >View All Movies</a
+    >
+  </ng-container>
+</div>
