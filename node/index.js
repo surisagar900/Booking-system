@@ -2,7 +2,9 @@ const express = require('express')
 const jwt = require('jsonwebtoken')
 const mysql = require('mysql')
 const bodyparser = require('body-parser')
-var cors = require('cors');
+const multer = require('multer')
+const fs = require('fs')
+var cors = require('cors')
 const app = express()
 //app.use(json())
 app.use(bodyparser.urlencoded({ extended: false }))
@@ -10,11 +12,12 @@ app.use(bodyparser.json())
 app.use(cors());
 
 // we need to enter time for how long token exist, and here convert time into ms
-const tokenExpiresInMiliSeconds = 86400000 + 'ms'; // equals to 1 day
+const tokenExpiresInMiliSeconds = 86400000; // equals to 1 day
 const userRole = {
     public: 1,
     admin: 2
 }
+const DIR = "./uploads"
 
 const db = mysql.createConnection({
     host: "localhost",
@@ -33,25 +36,55 @@ app.listen(3000, () => {
     console.log("we are live on port")
 })
 
+const storage = multer.diskStorage({
+    destination: (req, res, cb) => {
+        if (!fs.existsSync(DIR)) {
+            fs.mkdirSync(DIR);
+        }
+        cb(null, DIR)
+    },
+    filename: (req, file, cb) => {
+        cb(null, file.originalname);
+    }
+});
+const upload = multer({
+    storage: storage,
+    fileFilter: function (req, file, cb) {
+        checkFileType(file, cb)
+    }
+})
+//check filetype
+function checkFileType(file, cb) {
+    const filetypes = /jpeg|jpg|png|gif/;
+    //check mime
+    const mimetype = filetypes.test(file.mimetype);
+    if (mimetype) {
+        cb(null, true);
+    }
+    else {
+        cb(new Error('Images only!'), false);
+    }
+}
+
 //---------------------------------------------------------------------------------------------------------------------
 // Get All Users
 app.get('/user', (req, res) => {
-    db.query('select * from users', (err, data) => {
+    db.query('select id,firstname,email,phone,username,lastname from users', (err, data) => {
         if (data) {
             res.json(data)
         }
         else {
-            res.status(401).json({ message: "error" })
+            res.status(400).json({ message: "error" })
         }
     })
 })
 
 //---------------------------------------------------------------------------------------------------------------------
 // Get Specific User
-app.get('user/:id', (req, res) => {
-    db.query('select * from users where id = ?', [req.params.id], (err, data) => {
+app.get('/user/:id', (req, res) => {
+    db.query('select id,firstname,email,phone,username,lastname from users where id = ?', [req.params.id], (err, data) => {
         if (data.length > 0) {
-            res.json(data)
+            res.json(data[0])
         }
         else {
             res.status(400).json({ message: "no user" })
@@ -61,8 +94,8 @@ app.get('user/:id', (req, res) => {
 
 //---------------------------------------------------------------------------------------------------------------------
 // Delete Specific User
-app.delete('user/:id', (req, res) => {
-    db.query('DELETE FROM users WHERE id =  ?', [req.params.id], (err, data) => {
+app.delete('/user/:id', (req, res) => {
+    db.query('DELETE FROM users WHERE id = ?', [req.params.id], (err, data) => {
         if (data.length > 0) {
             res.json('data deleted')
         }
@@ -75,7 +108,7 @@ app.delete('user/:id', (req, res) => {
 //---------------------------------------------------------------------------------------------------------------------
 // Add User
 app.post('/signup', (req, res) => {
-    var id = req.body.id;
+    //var id = req.body.id;
     var username = req.body.username;
     var firstname = req.body.firstname;
     var lastname = req.body.lastname;
@@ -85,7 +118,7 @@ app.post('/signup', (req, res) => {
     var checkUser = `SELECT * FROM users WHERE username = '${username}'`;
     db.query(checkUser, (err, data) => {
         if (data.length == 0) {
-            var sql = `INSERT INTO users(id,username,firstname,lastname,email,phone,password) VALUES("${id}", "${username}", "${firstname}", "${lastname}", "${email}", "${phone}","${password}")`
+            var sql = `INSERT INTO users(username,firstname,lastname,email,phone,password) VALUES("${username}", "${firstname}", "${lastname}", "${email}", "${phone}","${password}")`
             db.query(sql, (err, data) => {
                 if (data) {
                     var getUserData = `SELECT * FROM users WHERE id = '${data.insertId}'`;
@@ -93,7 +126,7 @@ app.post('/signup', (req, res) => {
                         const token = jwt.sign({
                             datas: data[0]
                         }, "TOKEN_SECRET=7bc78545b1a3923cc1e1e19523fd5c3f20b409509...", {
-                            expiresIn: tokenExpiresInMiliSeconds
+                            expiresIn: tokenExpiresInMiliSeconds + 'ms'
                         })
                         //token:token
                         res.json({ id: data[0].id, token: token, expiresIn: tokenExpiresInMiliSeconds, role: userRole.public })
@@ -113,7 +146,7 @@ app.post('/signup', (req, res) => {
 
 //---------------------------------------------------------------------------------------------------------------------
 // Update Specific User
-app.put('user/:id', (req, res) => {
+app.put('/user/:id', (req, res) => {
     var id = req.params.id;
     var username = req.body.username;
     var firstname = req.body.firstname;
@@ -153,40 +186,170 @@ app.post('/login', (req, res) => {
 })
 
 //---------------------------------------------------------------------------------------------------------------------
-// Book Movie
-app.post('/booking', (req, res) => {
-    var movie = req.body.movie;
-    var seat = req.body.seat;
-    var name = req.body.name;
-    console.log(req.body);
-    var sql = `INSERT INTO book (movie,seat,name) values("${movie}","${seat}","${name}")`
-    db.query(sql, (err, data) => {
-        console.log(data);
-        console.log(err);
-        if (data) {
-            res.json("Movie booked!!")
-        }
-        else {
-            res.status(400).json({ message: "data not added" })
+// Get specific ticket from book
+app.get('/getticket/:bookingId', (req, res) => {
+    var bookingId = req.params.bookingId;
+    var op = `SELECT book.bookingId, book.seat, book.price, book.name, book.movieId, book.bookedOn, movies.movieName FROM
+    book INNER JOIN movies on book.movieId = movies.movieId WHERE book.bookingId = "${bookingId}"`
+    db.query(op, (err, data) => {
+        if (data.length > 0) {
+            res.json(data[0]);
+        } else {
+            res.status(400).json({ message: "No booking exists !!" })
         }
     })
 })
 
 //---------------------------------------------------------------------------------------------------------------------
-// get booking history
-app.get("/bookinghistory/:id", (req, res) => {
-    db.query('SELECT * FROM book where id =?', [req.params.id], (err, data) => {
+// book a ticket
+app.post('/booking/:movieId', (req, res) => {
+    var movieId = req.params.movieId;
+    var seat = req.body.seat;
+    var price = req.body.price;
+    var name = req.body.name;
+    var sql = `INSERT INTO book (movieId,seat,name,price) values("${movieId}","${seat}","${name}","${price}")`
+    db.query(sql, (err, data) => {
+        if (data) {
+            res.json("Hurray, Seats booked!!")
+        }
+        else {
+            res.status(400).json(err)
+        }
+    })
+})
+
+//---------------------------------------------------------------------------------------------------------------------
+// booked seats for a movie
+app.get("/bookedseats/:movieId", (req, res) => {
+    db.query('SELECT seat FROM book WHERE movieId = ?', [req.params.movieId], (err, data) => {
+        if (data.length > 0) {
+            var seats = [];
+            for (let i = 0; i < data.length; i++) {
+                seats[i] = data[i].seat;
+            }
+            res.json({ "bookedSeats": seats })
+        } else {
+            res.status(400).json({ message: "No booked seats" })
+        }
+    })
+})
+
+//---------------------------------------------------------------------------------------------------------------------
+// booked history by movie id
+app.get("/bookinghistory/:movieId", (req, res) => {
+    db.query('SELECT * FROM book where movieId = ?', [req.params.movieId], (err, data) => {
         if (data.length > 0) {
             res.json(data)
-        }
-        else {
-            res.status(400).json({ message: "no such id" })
+        } else {
+            res.status(400).json({ message: "No bookings yet for this movie" })
         }
     })
 })
 
 //---------------------------------------------------------------------------------------------------------------------
-// signup and login api for admin
+// delete booking by movie id
+app.delete("/clearbooking/:movieId", (req, res) => {
+    db.query('DELETE FROM book WHERE movieId = ?', [req.params.movieId], (err, data) => {
+        if (data.affectedRows > 0) {
+            res.json({ message: "All bookings cleared for this movie !!" });
+        } else {
+            res.status(400).json({ message: "Nothing to clear for this movie !!" });
+        }
+    })
+})
+
+//---------------------------------------------------------------------------------------------------------------------
+// GET specific movie
+app.get("/movie/:movieId", (req, res) => {
+    db.query('SELECT * FROM movies WHERE movieId = ?', [req.params.movieId], (er, data) => {
+        if (data.length > 0) {
+            res.json(data);
+        } else {
+            res.status(400).json({ message: "Unable to view movie !!. Check movie exists or not." })
+        }
+    })
+
+})
+
+//---------------------------------------------------------------------------------------------------------------------
+// GET all movies
+app.get("/movie", (req, res) => {
+    db.query('select * from movies', (err, data) => {
+        if (data) {
+            res.json(data)
+        } else {
+            res.status(400).json({ message: "No movies, Add a movie first !!" })
+        }
+    })
+})
+
+//---------------------------------------------------------------------------------------------------------------------
+// add new movie
+app.post("/movie", upload.single('movieImg'), (req, res) => {
+    //MovieDd is in AUTO INCREMENT
+    if (!req.file) {
+        res.send("error no image")
+        return
+    }
+    var movieName = req.body.movieName;
+    var movieDesc = req.body.movieDesc;
+    var moviePoster = req.body.moviePoster;
+    var movieRating = req.body.movieRating;
+    var movieLength = req.body.movieLength;
+    var movieImg = req.file.filename;
+    var store = `INSERT INTO movies (movieName,movieDesc,moviePoster,movieRating,movieLength,movieImg) values("${movieName}","${movieDesc}","${moviePoster}","${movieRating}","${movieLength}","${movieImg}")`
+    db.query(store, (err, data) => {
+        if (data) {
+            res.json({ message: "Movied Added !!" })
+        }
+        else {
+            res.status(400).json(err)
+        }
+    })
+})
+
+
+//---------------------------------------------------------------------------------------------------------------------
+// edit movie
+app.put("/movie/:movieId", upload.single('movieImg'), (req, res) => {
+    var movieId = req.params.movieId;
+    var movieName = req.body.movieName;
+    var movieDesc = req.body.movieDesc;
+    var moviePoster = req.body.moviePoster;
+    var movieRating = req.body.movieRating;
+    var movieLength = req.body.movieLength;
+    var movieImg = req.file.filename;
+    var set = `UPDATE movies SET movieName = "${movieName}", movieDesc = "${movieDesc}", moviePoster = "${moviePoster}", movieRating = "${movieRating}", movieLength = "${movieLength}", movieImg = "${movieImg}" WHERE movieId = ${movieId}`
+    db.query(set, (err, data) => {
+        if (data) {
+            res.json({ message: "Movie Updated !!" })
+            return
+        }
+        res.status(400).json(err)
+    })
+})
+
+
+//---------------------------------------------------------------------------------------------------------------------
+// delete movie
+app.delete("/movie/:movieId", (req, res) => {
+    db.query('DELETE FROM movies WHERE movieId = ?', [req.params.movieId], (err, data) => {
+        if (err) {
+            if (err.errno == "1451") { //Error due to foreign key constraint
+                res.status(400).json({ message: "Booking exists for this moive. Clear booking for this movie first !!" })
+            } else { //Any other error
+                res.status(400).json({ message: err })
+            }
+        } else if (data.affectedRows > 0) {
+            res.json({ message: "Movie Deleted !!" })
+        } else {
+            res.status(400).json({ message: "Movie doesn't exist, cannot perform deletion !!" })
+        }
+    })
+})
+
+//---------------------------------------------------------------------------------------------------------------------
+// signup for admin
 app.post("/adminsignup", (req, res) => {
     var username = req.body.username;
     var password = req.body.password;
@@ -201,6 +364,8 @@ app.post("/adminsignup", (req, res) => {
     })
 })
 
+//---------------------------------------------------------------------------------------------------------------------
+// login for admin
 app.post("/adminlogin", (req, res) => {
     var username = req.body.username;
     var password = req.body.password;
@@ -220,3 +385,4 @@ app.post("/adminlogin", (req, res) => {
         }
     })
 })
+
