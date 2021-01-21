@@ -1,41 +1,52 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import { throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
-
-export interface UserResponse {
-  userName: string;
-  firstName: string;
-  lastName: string;
-  dob: Date;
-  email: string;
-  phone: number;
-}
+import { User } from '../models/users';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UsersService {
-  constructor(private http: HttpClient) {}
-
   private configURL = environment.serverUrl;
+  private localData;
 
-  getUserData() {
-    let username: string = '';
-    let local: any = JSON.parse(localStorage.getItem('LoggedInUserData'));
-    if (local) username = local.username;
+  constructor(private http: HttpClient, private auth: AuthService) {
+    this.localData = auth.loggedInUser.getValue();
+  }
+
+  getAllUserData(): Observable<User[]> {
     return this.http
-      .get<UserResponse>(this.configURL + username)
+      .get<User[]>(this.configURL + 'user')
       .pipe(catchError(this.handleErrors));
   }
 
-  editUserData(userEditData) {
-    let username: string = '';
-    let local: any = JSON.parse(localStorage.getItem('LoggedInUserData'));
-    if (local) username = local.username;
+  getUserData(): Observable<User> {
+    let userId: number;
+    if (this.localData) userId = this.localData.id;
     return this.http
-      .put<UserResponse>(this.configURL + username, userEditData)
+      .get<User>(this.configURL + 'user/' + userId)
+      .pipe(catchError(this.handleErrors));
+  }
+
+  editUserData(userEditData): Observable<any> {
+    let userId: number;
+    this.localData = JSON.parse(localStorage.getItem('LoggedInUserData'));
+    if (this.localData) userId = this.localData.id;
+    return this.http
+      .put<any>(this.configURL + 'user/' + userId, userEditData)
+      .pipe(catchError(this.handleErrors));
+  }
+
+  deleteUserData(): Observable<any> {
+    let userId: number;
+    this.localData = JSON.parse(localStorage.getItem('LoggedInUserData'));
+    if (this.localData) userId = this.localData.id;
+    return this.http
+      .delete<any>(this.configURL + 'user/' + userId)
       .pipe(catchError(this.handleErrors));
   }
 

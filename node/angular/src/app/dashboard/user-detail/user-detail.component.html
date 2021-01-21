@@ -6,7 +6,7 @@
   <div class="col-12 my-3">
     <div class="row py-3">
       <div class="col-4">Username</div>
-      <div class="col">{{ userData?.userName | lowercase }}</div>
+      <div class="col">{{ userData?.username | lowercase }}</div>
     </div>
     <div class="row py-3">
       <div class="col-4">Mobile</div>
@@ -14,19 +14,15 @@
     </div>
     <div class="row py-3">
       <div class="col-4">First Name</div>
-      <div class="col">{{ userData?.firstName | titlecase }}</div>
+      <div class="col">{{ userData?.firstname | titlecase }}</div>
     </div>
     <div class="row py-3">
       <div class="col-4">Last Name</div>
-      <div class="col">{{ userData?.lastName | titlecase }}</div>
+      <div class="col">{{ userData?.lastname | titlecase }}</div>
     </div>
     <div class="row py-3">
       <div class="col-4">Email</div>
       <div class="col">{{ userData?.email | lowercase }}</div>
-    </div>
-    <div class="row py-3">
-      <div class="col-4">Date of birth</div>
-      <div class="col">{{ userData?.dob | date: "d/M/yyyy" }}</div>
     </div>
   </div>
 </div>

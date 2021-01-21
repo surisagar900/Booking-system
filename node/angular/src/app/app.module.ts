@@ -37,6 +37,7 @@ import {
 import { UserEditComponent } from './public/user-edit/user-edit.component';
 import { UserBookingComponent } from './public/user-booking/user-booking.component';
 import { AllBookingsComponent } from './admin/all-bookings/all-bookings.component';
+import { LoaderComponent } from './layout/loader/loader.component';
 
 const globalRippleConfig: RippleGlobalOptions = {
   disabled: false,
@@ -68,6 +69,7 @@ const globalRippleConfig: RippleGlobalOptions = {
     UserEditComponent,
     UserBookingComponent,
     AllBookingsComponent,
+    LoaderComponent,
   ],
   imports: [
     BrowserModule,

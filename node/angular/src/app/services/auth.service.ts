@@ -7,7 +7,7 @@ import { Router } from '@angular/router';
 
 @Injectable()
 export class AuthService {
-  loggedInUser = new BehaviorSubject<number>(null);
+  loggedInUser = new BehaviorSubject<any>(null);
   private tokenTime: any;
   private serverUrl = environment.serverUrl;
 
@@ -44,7 +44,7 @@ export class AuthService {
     );
 
     if (loadedUser._token) {
-      this.loggedInUser.next(loadedUser.userId);
+      this.loggedInUser.next(loadedUser);
       const expiryDuration =
         new Date(userData.expiresIn).getTime() - new Date().getTime();
       this.autoLogOut(expiryDuration);
@@ -92,7 +92,7 @@ export class AuthService {
   }) {
     const expiryDate = new Date(new Date().getTime() + res.expiresIn).getTime();
     const userData = new userLocalData(res.id, res.role, res.token, expiryDate);
-    this.loggedInUser.next(userData.userId);
+    this.loggedInUser.next(userData);
     localStorage.setItem('LoggedInUserData', JSON.stringify(userData));
   }
 }
