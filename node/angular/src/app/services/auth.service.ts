@@ -11,23 +11,31 @@ export class AuthService {
   private tokenTime: any;
   private serverUrl = environment.serverUrl;
 
-  // this is the response on login/register
-  // { id: data[0].id, token: token, expiresIn: tokenExpiresInMiliSeconds, role: userRole.admin }
-
   constructor(private http: HttpClient, private router: Router) {}
 
-  public login(userName: string, password: string): Observable<any> {
-    return this.http
-      .post(this.serverUrl + 'login', {
-        username: userName,
-        password: password,
+  public login(
+    userName: string,
+    password: string,
+    isAdminRole: boolean
+  ): Observable<any> {
+    let request: Observable<any>;
+
+    isAdminRole
+      ? (request = this.http.post(this.serverUrl + 'adminlogin', {
+          username: userName,
+          password: password,
+        }))
+      : (request = this.http.post(this.serverUrl + 'login', {
+          username: userName,
+          password: password,
+        }));
+
+    return request.pipe(
+      catchError(this.handleErrors),
+      tap((response) => {
+        this.handleToken(response);
       })
-      .pipe(
-        catchError(this.handleErrors),
-        tap((response) => {
-          this.handleToken(response);
-        })
-      );
+    );
   }
 
   autoLogin() {
@@ -109,14 +117,14 @@ export interface registerModel {
 
 export class userLocalData {
   constructor(
-    public userId: number,
+    public id: number,
     public role: number,
     private token: string,
-    private expiryTimestamp: number
+    private expiresIn: number
   ) {}
 
   get _token() {
-    if (!this.expiryTimestamp || new Date().getTime() > this.expiryTimestamp) {
+    if (!this.expiresIn || new Date().getTime() > this.expiresIn) {
       return null;
     }
     return this.token;

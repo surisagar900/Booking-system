@@ -10,6 +10,7 @@
           </h1>
         </div>
         <div class="col-md-6 mx-auto mb-5 p-5 bg-text">
+          <a [routerLink]="['/login']">already registered? click here</a>
           <form (ngSubmit)="onSubmit()" [formGroup]="RegisterForm">
             <div class="row">
               <mat-form-field class="col-12 mb-2" appearance="outline">

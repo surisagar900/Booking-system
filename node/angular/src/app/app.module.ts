@@ -19,7 +19,6 @@ import { FooterComponent } from './layout/footer/footer.component';
 import { AuthService } from './services/auth.service';
 import { HttpClientModule } from '@angular/common/http';
 import { MovieCardComponent } from './public/movie-card/movie-card.component';
-import { MovieDetailComponent } from './public/movie-detail/movie-detail.component';
 import { MatCardModule } from '@angular/material/card';
 import { BookMovieComponent } from './public/book-movie/book-movie.component';
 import { PrintTicketComponent } from './public/book-movie/print-ticket/print-ticket.component';
@@ -35,9 +34,10 @@ import {
   RippleGlobalOptions,
 } from '@angular/material/core';
 import { UserEditComponent } from './public/user-edit/user-edit.component';
-import { UserBookingComponent } from './public/user-booking/user-booking.component';
 import { AllBookingsComponent } from './admin/all-bookings/all-bookings.component';
 import { LoaderComponent } from './layout/loader/loader.component';
+import { MatSliderModule } from '@angular/material/slider';
+import { AddAdminComponent } from './admin/add-admin/add-admin.component';
 
 const globalRippleConfig: RippleGlobalOptions = {
   disabled: false,
@@ -57,7 +57,6 @@ const globalRippleConfig: RippleGlobalOptions = {
     HeaderComponent,
     FooterComponent,
     MovieCardComponent,
-    MovieDetailComponent,
     BookMovieComponent,
     PrintTicketComponent,
     DashboardComponent,
@@ -67,9 +66,9 @@ const globalRippleConfig: RippleGlobalOptions = {
     AddMovieComponent,
     AllMoviesComponent,
     UserEditComponent,
-    UserBookingComponent,
     AllBookingsComponent,
     LoaderComponent,
+    AddAdminComponent,
   ],
   imports: [
     BrowserModule,
@@ -85,6 +84,7 @@ const globalRippleConfig: RippleGlobalOptions = {
     MatSelectModule,
     MatCardModule,
     MatRippleModule,
+    MatSliderModule,
   ],
   providers: [
     AuthService,

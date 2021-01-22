@@ -12,18 +12,36 @@ export class BookService {
 
   constructor(private http: HttpClient) {}
 
-  public bookSeat(
-    userId: number,
-    movieName: string,
-    seat: string,
-    name: string
-  ): Observable<any> {
+  bookSeat(userId: number, movieId: number, seat: string): Observable<any> {
     return this.http
-      .post(this.serverUrl + 'booking', {
-        movie: movieName,
+      .post(this.serverUrl + 'booking/' + movieId, {
         seat: seat,
-        name: name,
+        userId: userId,
       })
+      .pipe(catchError(this.handleErrors));
+  }
+
+  bookedSeats(movieId: number): Observable<{ bookedSeats: string[] }> {
+    return this.http
+      .get<{ bookedSeats: string[] }>(this.serverUrl + 'bookedseats/' + movieId)
+      .pipe(catchError(this.handleErrors));
+  }
+
+  forPrinting(bookingId: number): Observable<any> {
+    return this.http
+      .get<any>(this.serverUrl + 'getticket/' + bookingId)
+      .pipe(catchError(this.handleErrors));
+  }
+
+  bookingHistory(): Observable<any> {
+    return this.http
+      .get<any>(this.serverUrl + 'bookinghistory')
+      .pipe(catchError(this.handleErrors));
+  }
+
+  deleteBooking(movieId: number): Observable<any> {
+    return this.http
+      .delete<any>(this.serverUrl + 'clearbooking/' + movieId)
       .pipe(catchError(this.handleErrors));
   }
 

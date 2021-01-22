@@ -1,33 +1,21 @@
-<!-- <div class="card mb-4">
-  <div
-    class="poster"
-    [style.background-image]="'url(' + imageUrl + movieData.poster_path + ')'"
-  ></div>
-  <div class="card-body">
-    <h2 class="card-title">{{ movieData.title }}</h2>
-    <p class="card-text">{{ movieData.overview | slice: 0:70 }} ...</p>
-    <a href="#" class="btn btn-primary">View Detail</a>
-  </div>
-</div> -->
-
 <mat-card
-  [style.background-image]="'url(' + imageUrl + movieData.poster_path + ')'"
+  [style.background-image]="'url(/assets/uploads/' + movieData.movieImg + ')'"
   class="mb-4 movie-card"
 >
   <div class="text-overlay p-2">
     <div class="d-flex flex-column justify-content-end flex-nowrap h-100 w-100">
       <div class="d-flex justify-content-between align-items-end">
-        <h2 class="mat-h2 m-0">{{ movieData.title | titlecase }}</h2>
+        <h2 class="mat-h2 m-0">{{ movieData.movieName | titlecase }}</h2>
         <h3 class="mat-h3 m-0">
-          {{ movieData.release_date | date: "dd MMM, yyyy" }}
+          {{ movieData.moviePrice | currency: "INR" }}
         </h3>
       </div>
-      <h6 class="mat-h4 m-0">{{ movieData.overview | slice: 0:70 }} ...</h6>
+      <h6 class="mat-h4 m-0">{{ movieData.movieDesc | slice: 0:70 }} ...</h6>
       <button
         mat-flat-button
         class="w-50"
         color="primary"
-        [routerLink]="[movieData.id, 'book']"
+        [routerLink]="[movieData.movieId, 'book']"
       >
         View Detail
       </button>

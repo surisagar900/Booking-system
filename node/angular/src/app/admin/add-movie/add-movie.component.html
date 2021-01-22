@@ -5,84 +5,36 @@
       <div class="row">
         <mat-form-field class="col-12 mb-2" appearance="outline">
           <mat-label>Title</mat-label>
-          <input required formControlName="title" matInput />
+          <input required formControlName="movieName" matInput />
           <mat-hint>
             Title can contains (a-z,0-9,:,A-Z,-, ,') only and 1 to 60 characters
             long
           </mat-hint>
           <mat-error
             *ngIf="
-              !AddMovieForm.get('title').hasError('required') &&
-              AddMovieForm.get('title').errors
+              !AddMovieForm.get('movieName').hasError('required') &&
+              AddMovieForm.get('movieName').errors
             "
           >
             <p>Enter a valid title</p>
           </mat-error>
-          <mat-error *ngIf="AddMovieForm.get('title').hasError('required')">
+          <mat-error *ngIf="AddMovieForm.get('movieName').hasError('required')">
             <p>Title is required</p>
           </mat-error>
         </mat-form-field>
 
         <mat-form-field class="col-12 mb-2" appearance="outline">
-          <mat-label>Director Name</mat-label>
-          <input required formControlName="director" matInput />
-          <mat-error
-            *ngIf="
-              !AddMovieForm.get('director').hasError('required') &&
-              AddMovieForm.get('director').errors
-            "
-          >
-            <p>No spaces and 1 to 30 characters long</p>
-          </mat-error>
-          <mat-error *ngIf="AddMovieForm.get('director').hasError('required')">
-            <p>Director name is required</p>
-          </mat-error>
-        </mat-form-field>
-
-        <mat-form-field class="col-12 mb-2" appearance="outline">
-          <mat-label>Language</mat-label>
-          <input required formControlName="language" matInput />
-          <mat-error
-            *ngIf="
-              !AddMovieForm.get('language').hasError('required') &&
-              AddMovieForm.get('language').errors
-            "
-          >
-            <p>No spaces and 1 to 30 characters long</p>
-          </mat-error>
-          <mat-error *ngIf="AddMovieForm.get('language').hasError('required')">
-            <p>Language is required</p>
-          </mat-error>
-        </mat-form-field>
-
-        <mat-form-field class="col-12 mb-2" appearance="outline">
-          <mat-label>Genre</mat-label>
-          <input
-            required
-            formControlName="genre"
-            matInput
-            placeholder="Enter Genre"
-          />
-          <mat-error
-            *ngIf="
-              !AddMovieForm.get('genre').hasError('required') &&
-              AddMovieForm.get('genre').errors
-            "
-          >
-            <p>No spaces and 1 to 30 characters long</p>
-          </mat-error>
-          <mat-error *ngIf="AddMovieForm.get('genre').hasError('required')">
-            <p>Genre is required</p>
-          </mat-error>
-        </mat-form-field>
-
-        <mat-form-field class="col-12 mb-2" appearance="outline">
           <mat-label>Description</mat-label>
-          <textarea required formControlName="description" matInput></textarea>
+          <textarea
+            required
+            formControlName="movieDesc"
+            rows="10"
+            matInput
+          ></textarea>
           <mat-error
             *ngIf="
-              !AddMovieForm.get('description').hasError('required') &&
-              AddMovieForm.get('description').errors
+              !AddMovieForm.get('movieDesc').hasError('required') &&
+              AddMovieForm.get('movieDesc').errors
             "
           >
             <p>
@@ -90,72 +42,72 @@
               to 500 characters long
             </p>
           </mat-error>
-          <mat-error
-            *ngIf="AddMovieForm.get('description').hasError('required')"
-          >
+          <mat-error *ngIf="AddMovieForm.get('movieDesc').hasError('required')">
             <p>description is required</p>
           </mat-error>
         </mat-form-field>
 
+        <div class="col-12 mb-2">
+          <p>Rating</p>
+          <mat-slider
+            [max]="5"
+            [min]="1"
+            [step]="0.5"
+            [thumbLabel]="true"
+            [tickInterval]="1"
+            formControlName="movieRating"
+            color="primary"
+            required
+          >
+          </mat-slider>
+          <mat-error
+            *ngIf="AddMovieForm.get('movieRating').hasError('required')"
+          >
+            <p>Rating is required</p>
+          </mat-error>
+        </div>
+
         <mat-form-field class="col-12 mb-2" appearance="outline">
-          <mat-label>Released Year</mat-label>
+          <mat-label>Movie Price</mat-label>
           <input
             type="number"
             required
-            formControlName="releaseYear"
+            required
+            formControlName="moviePrice"
             matInput
           />
           <mat-error
             *ngIf="
-              !AddMovieForm.get('releaseYear').hasError('required') &&
-              AddMovieForm.get('releaseYear').errors
+              !AddMovieForm.get('moviePrice').hasError('required') &&
+              AddMovieForm.get('moviePrice').errors
             "
           >
-            <p>
-              Inbetween 1800 to
-              {{ currentYear }}
-            </p>
+            <p>Minimum 120 Rs. and Maximum 1000 Rs.</p>
           </mat-error>
           <mat-error
-            *ngIf="AddMovieForm.get('releaseYear').hasError('required')"
-          >
-            <p>Release year is required</p>
-          </mat-error>
-        </mat-form-field>
-
-        <mat-form-field class="col-12 mb-2" appearance="outline">
-          <mat-label>Return days</mat-label>
-          <input type="number" required formControlName="returnDays" matInput />
-          <mat-error
-            *ngIf="
-              !AddMovieForm.get('returnDays').hasError('required') &&
-              AddMovieForm.get('returnDays').errors
-            "
-          >
-            <p>Not more than 30 days</p>
-          </mat-error>
-          <mat-error
-            *ngIf="AddMovieForm.get('returnDays').hasError('required')"
+            *ngIf="AddMovieForm.get('moviePrice').hasError('required')"
           >
             <p>Field is required</p>
           </mat-error>
         </mat-form-field>
 
-        <mat-form-field class="col-12 mb-2" appearance="outline">
-          <mat-label>After Fine</mat-label>
-          <input type="number" required formControlName="fine" matInput />
-          <mat-error
-            *ngIf="
-              !AddMovieForm.get('fine').hasError('required') &&
-              AddMovieForm.get('fine').errors
-            "
-          >
-            <p>Not more than {{ 1000 | currency: "INR" }}</p>
+        <div class="col-12 mb-2" appearance="outline">
+          <p>Upload Image*</p>
+          <input
+            accept="image/jpeg,image/png,image/jpg"
+            type="file"
+            (change)="fileUpload($event.target.files)"
+          />
+          <div>
+            <img class="img-thumbnail" [src]="imageSrc" height="100px" />
+          </div>
+          <mat-error>
+            <p>{{ fileError }}</p>
           </mat-error>
-          <mat-error *ngIf="AddMovieForm.get('fine').hasError('required')">
+          <mat-error *ngIf="AddMovieForm.get('movieImg').hasError('required')">
             <p>Field is required</p>
           </mat-error>
-        </mat-form-field>
+        </div>
 
         <p class="col-12 text-danger text-center" *ngIf="errors">
           {{ errors }}
@@ -167,9 +119,9 @@
             mat-raised-button
             color="primary"
             type="submit"
-            [disabled]="AddMovieForm.invalid || loading"
+            [disabled]="AddMovieForm.invalid"
           >
-            <span translate>Save</span>
+            <span>Save</span>
           </button>
         </div>
       </div>

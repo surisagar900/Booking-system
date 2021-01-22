@@ -37,9 +37,7 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  onSubmit() {
-    console.log(this.loginForm);
-
+  onSubmit(isAdmin: boolean = false) {
     if (this.loginForm.invalid) {
       return;
     }
@@ -47,16 +45,19 @@ export class LoginComponent implements OnInit {
     this.errors = '';
     this.loading = true;
     this.loginForm.disable();
-
     this.authService
-      .login(this.loginForm.value.username, this.loginForm.value.password)
+      .login(
+        this.loginForm.value.username,
+        this.loginForm.value.password,
+        isAdmin
+      )
       .subscribe(
         (res) => {
           this.loading = false;
           this.loginForm.enable();
           this.errors = '';
           this.loginForm.reset();
-          if (res.role == 'Admin') {
+          if (res.role == 2) {
             this.router.navigate(['/admin']);
           } else {
             this.router.navigate(['/']);

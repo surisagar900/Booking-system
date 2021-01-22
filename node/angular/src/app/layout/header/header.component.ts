@@ -9,10 +9,12 @@ import { AuthService } from 'src/app/services/auth.service';
 export class HeaderComponent implements OnInit {
   constructor(private authService: AuthService) {}
   isLoggedIn: boolean = false;
+  role: number = 1 | 2;
 
   ngOnInit(): void {
     this.authService.loggedInUser.subscribe((res) => {
       this.isLoggedIn = !!res;
+      this.role = res.role;
     });
   }
 

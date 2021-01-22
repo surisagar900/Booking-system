@@ -26,6 +26,20 @@
 
       <ng-template #loggedIn>
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item ml-5" *ngIf="role == 1">
+            <a role="button" [routerLink]="['/profile']" class="nav-btn">
+              <mat-icon>mood</mat-icon>
+              <p class="mat-h6 m-0 p-0">Profile</p>
+            </a>
+          </li>
+
+          <li class="nav-item ml-5" *ngIf="role == 2">
+            <a role="button" [routerLink]="['/admin']" class="nav-btn">
+              <mat-icon>dashboard</mat-icon>
+              <p class="mat-h6 m-0 p-0">Dashboard</p>
+            </a>
+          </li>
+
           <li class="nav-item ml-5">
             <a role="button" (click)="onLogoutBtn()" class="nav-btn">
               <mat-icon>exit_to_app</mat-icon>

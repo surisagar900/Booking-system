@@ -1,0 +1,79 @@
+<div class="row m-3">
+  <div class="col-6">
+    <form (ngSubmit)="onSubmit()" [formGroup]="addAdminForm">
+      <div class="row">
+        <mat-form-field class="col-12 mb-2" appearance="outline">
+          <mat-label>Username</mat-label>
+          <input
+            required
+            formControlName="username"
+            matInput
+            placeholder="Enter username"
+          />
+          <mat-icon matSuffix>account_circle</mat-icon>
+          <mat-error
+            *ngIf="
+              !addAdminForm.get('username').hasError('required') &&
+              addAdminForm.get('username').errors
+            "
+          >
+            <p>Enter a valid username</p>
+          </mat-error>
+          <mat-error *ngIf="addAdminForm.get('username').hasError('required')">
+            <p>Username is required</p>
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="col-12 mb-2" appearance="outline">
+          <mat-label>Password</mat-label>
+          <input
+            formControlName="password"
+            matInput
+            [type]="hide ? 'password' : 'text'"
+            placeholder="Enter password"
+          />
+          <button
+            (click)="hide = !hide"
+            type="button"
+            mat-icon-button
+            matSuffix
+          >
+            <mat-icon>{{ hide ? "visibility_off" : "visibility" }}</mat-icon>
+          </button>
+
+          <mat-hint>
+            Password can contains a-z,A-Z,0-9,@,*,# only and 8 to 20 characters
+            long.
+          </mat-hint>
+          <mat-error
+            *ngIf="
+              !addAdminForm.get('password').hasError('required') &&
+              addAdminForm.get('password').errors
+            "
+          >
+            <p>should match the pattern</p>
+          </mat-error>
+          <mat-error *ngIf="addAdminForm.get('password').hasError('required')">
+            <p>Password is required</p>
+          </mat-error>
+        </mat-form-field>
+
+        <p class="col-12 text-danger text-center" *ngIf="errors">
+          {{ errors }}
+        </p>
+
+        <div class="col-12 mt-4">
+          <button
+            class="col-12"
+            mat-raised-button
+            color="primary"
+            type="submit"
+            [disabled]="addAdminForm.invalid"
+          >
+            <span>Login</span>
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

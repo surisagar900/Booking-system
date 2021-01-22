@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
+import { Movie } from 'src/app/models/movies';
 import { AuthService } from 'src/app/services/auth.service';
 import { BookService } from 'src/app/services/book.service';
 import { MoviesService } from 'src/app/services/movies.service';
@@ -11,36 +12,47 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./book-movie.component.css'],
 })
 export class BookMovieComponent implements OnInit {
-  movie: any;
+  movie: Movie;
   imageUrl: string = environment.posterUrl;
   constructor(
     private movieService: MoviesService,
     private route: ActivatedRoute,
     private bookService: BookService,
-    private authService: AuthService,
-    private router: Router
+    private authService: AuthService
   ) {}
 
   showView: boolean = false;
 
   seatRow: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   seatColumn: string[] = ['A', 'B', 'C', 'D'];
+  movieId: number;
+  userId: number;
 
   ngOnInit(): void {
     this.route.paramMap.subscribe((param: ParamMap) => {
+      this.movieId = +param.get('movieId');
       this.getMovieById(+param.get('movieId'));
     });
   }
 
   getMovieById(id: number) {
-    this.movieService.getMovieById(id).subscribe((res) => {
+    this.movieService.getMovieData(id).subscribe((res) => {
       this.movie = res;
       this.showView = true;
+
+      this.authService.loggedInUser.subscribe((res) => {
+        this.userId = res.id;
+        if (this.userId != null) {
+          this.bookService.bookedSeats(this.movieId).subscribe((res) => {
+            this.bookedSeats = res.bookedSeats.join(',').split(',');
+          });
+        }
+      });
     });
   }
 
   isTicketBooked: boolean = false;
-
+  bookedSeats: string[] = [];
   selectedSeats: string[] = [];
 
   selectSeat(seatCol: string, seatRow: number) {
@@ -58,25 +70,27 @@ export class BookMovieComponent implements OnInit {
     return seatIndex == -1 ? false : true;
   }
 
+  checkBookedSeat(seat: string): boolean {
+    let seatIndex = this.bookedSeats.indexOf(seat);
+    return seatIndex == -1 ? false : true;
+  }
+
   bookSeat() {
-    let userId = this.authService.loggedInUser.value;
-    if (userId == null) {
+    if (this.userId == null) {
       window.alert('Please login first');
       return;
     }
 
     let seats = this.selectedSeats.join(',');
-    this.bookService
-      .bookSeat(+userId, this.movie.title, seats, '' + userId)
-      .subscribe(
-        (res) => {
-          window.alert(res);
-          this.isTicketBooked = true;
-        },
-        (err) => {
-          window.alert(err);
-          this.isTicketBooked = false;
-        }
-      );
+    this.bookService.bookSeat(this.userId, this.movieId, seats).subscribe(
+      (res) => {
+        window.alert(res);
+        this.isTicketBooked = true;
+      },
+      (err) => {
+        window.alert(err);
+        this.isTicketBooked = false;
+      }
+    );
   }
 }

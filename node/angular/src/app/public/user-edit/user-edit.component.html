@@ -1,5 +1,5 @@
 <div class="col-md-8 p-5">
-  <form (ngSubmit)="onSubmit()" [formGroup]="RegisterForm">
+  <form (ngSubmit)="onSubmit()" [formGroup]="RegisterForm" *ngIf="loading">
     <div class="row">
       <mat-form-field class="col-12 mb-2" appearance="outline">
         <mat-label>Username</mat-label>
@@ -145,7 +145,7 @@
         </mat-error>
       </mat-form-field>
 
-      <p class="col-12 text-danger text-center" *ngIf="errors">
+      <p class="col-12 m-0 p-0 text-danger text-center" *ngIf="errors">
         {{ errors }}
       </p>
 
@@ -155,7 +155,7 @@
           mat-raised-button
           color="primary"
           type="submit"
-          [disabled]="RegisterForm.invalid || loading"
+          [disabled]="RegisterForm.invalid"
         >
           <span> Save </span>
         </button>

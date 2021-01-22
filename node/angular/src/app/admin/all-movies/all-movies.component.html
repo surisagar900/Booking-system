@@ -1,28 +1,47 @@
-<table class="table table-striped table-bordered table-hover table-responsive">
-  <thead>
-    <tr>
-      <th scope="col">#</th>
-      <th scope="col">MovieId</th>
-      <th scope="col">Title</th>
-      <th scope="col">Director</th>
-      <th scope="col">Genre</th>
-      <th scope="col">Language</th>
-      <th scope="col">Release Year</th>
-      <th scope="col">Return Days</th>
-      <th scope="col">Fine after free</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let item of allMoviesData; let i = index">
-      <th scope="row">{{ i + 1 }}</th>
-      <td>{{ item.moviesId }}</td>
-      <td>{{ item.title | titlecase }}</td>
-      <td>{{ item.director | titlecase }}</td>
-      <td>{{ item.genre | titlecase }}</td>
-      <td>{{ item.language | titlecase }}</td>
-      <td>{{ item.releaseYear }}</td>
-      <td>{{ item.returnDays }}</td>
-      <td>{{ item.fine | currency: "INR" }}</td>
-    </tr>
-  </tbody>
-</table>
+<div class="row">
+  <table
+    class="table mt-3 w-100 table-striped table-bordered table-hover table-responsive"
+  >
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Title</th>
+        <th scope="col">Description</th>
+        <th scope="col">Rating</th>
+        <th scope="col">Ticket Price</th>
+        <th scope="col">Movie Poster</th>
+        <th scope="col" colspan="2"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of allMoviesData; let i = index">
+        <th scope="row">{{ i + 1 }}</th>
+        <td>{{ item.movieName | titlecase }}</td>
+        <td>{{ item.movieDesc }}</td>
+        <td>{{ item.movieRating | number }}</td>
+        <td>{{ item.moviePrice | currency: "INR" }}</td>
+        <td>
+          <img
+            src="/assets/uploads/{{ item.movieImg }}"
+            [alt]="item.moviePoster"
+            height="100px"
+          />
+        </td>
+        <td>
+          <button
+            mat-mini-fab
+            color="primary"
+            [routerLink]="['edit', item.movieId]"
+          >
+            <mat-icon>edit</mat-icon>
+          </button>
+        </td>
+        <td>
+          <button mat-mini-fab color="warn" (click)="onDelete(item.movieId)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

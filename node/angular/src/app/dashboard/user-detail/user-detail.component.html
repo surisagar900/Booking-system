@@ -25,4 +25,14 @@
       <div class="col">{{ userData?.email | lowercase }}</div>
     </div>
   </div>
+  <div class="col-12">
+    <button
+      mat-stroked-button
+      style="background-color: rgba(197, 0, 0, 0.857); color: white"
+      type="submit"
+      (click)="onDelete()"
+    >
+      Deactivate account
+    </button>
+  </div>
 </div>

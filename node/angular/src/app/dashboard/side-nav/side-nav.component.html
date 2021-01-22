@@ -1,27 +1,18 @@
 <div class="list-group list-group-flush">
   <!-- common -->
-  <a
-    matRipple
-    [routerLink]="['./']"
-    routerLinkActive="active"
-    [routerLinkActiveOptions]="{ exact: true }"
-    class="list-group-item list-group-item-action"
-  >
-    View Profile
-  </a>
 
   <!-- public -->
-  <ng-container>
-    <hr />
+  <ng-container *ngIf="role == 1">
     <a
       matRipple
-      [routerLink]="['./bookings']"
+      [routerLink]="['./']"
       routerLinkActive="active"
       [routerLinkActiveOptions]="{ exact: true }"
       class="list-group-item list-group-item-action"
     >
-      Booking History
+      View Profile
     </a>
+    <hr />
     <a
       matRipple
       [routerLink]="['./edit']"
@@ -34,19 +25,35 @@
   </ng-container>
 
   <!-- admin -->
-  <ng-container>
-    <hr />
+  <ng-container *ngIf="role == 2">
     <a
       matRipple
-      [routerLink]="['./users']"
+      [routerLink]="['/admin/users']"
       routerLinkActive="active"
       [routerLinkActiveOptions]="{ exact: true }"
       class="list-group-item list-group-item-action"
-      >View All Users</a
+      >View All Users
+    </a>
+    <a
+      matRipple
+      [routerLink]="['/admin/add']"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }"
+      class="list-group-item list-group-item-action"
+      >Add new admin</a
     >
     <a
       matRipple
-      [routerLink]="['./movie/add']"
+      [routerLink]="['/admin/bookings']"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }"
+      class="list-group-item list-group-item-action"
+    >
+      Booking History
+    </a>
+    <a
+      matRipple
+      [routerLink]="['/admin/movie/add']"
       routerLinkActive="active"
       [routerLinkActiveOptions]="{ exact: true }"
       class="list-group-item list-group-item-action"
@@ -54,7 +61,7 @@
     >
     <a
       matRipple
-      [routerLink]="['./movie']"
+      [routerLink]="['/admin/movie']"
       routerLinkActive="active"
       [routerLinkActiveOptions]="{ exact: true }"
       class="list-group-item list-group-item-action"

@@ -10,7 +10,8 @@
           </h1>
         </div>
         <div class="col-md-6 mx-auto mb-5 p-5 bg-text">
-          <form (ngSubmit)="onSubmit()" [formGroup]="loginForm">
+          <a [routerLink]="['/register']">not registered? click here</a>
+          <form [formGroup]="loginForm">
             <div class="row">
               <mat-form-field class="col-12 mb-2" appearance="outline">
                 <mat-label>Username</mat-label>
@@ -75,15 +76,31 @@
               </p>
 
               <div class="col-12 mt-4">
-                <button
-                  class="col-12"
-                  mat-raised-button
-                  color="primary"
-                  type="submit"
-                  [disabled]="loginForm.invalid || loading"
-                >
-                  <span>Login</span>
-                </button>
+                <div class="row">
+                  <div class="col-6">
+                    <button
+                      class="w-100 mx-2"
+                      mat-raised-button
+                      color="primary"
+                      [disabled]="loginForm.invalid || loading"
+                      (click)="onSubmit()"
+                    >
+                      <span>Login</span>
+                    </button>
+                  </div>
+
+                  <div class="col-6">
+                    <button
+                      class="w-100 mx-2"
+                      mat-raised-button
+                      color="primary"
+                      [disabled]="loginForm.invalid || loading"
+                      (click)="onSubmit(true)"
+                    >
+                      <span>Admin Login</span>
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
           </form>

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { movies } from 'src/app/models/movies';
+import { Movie, movies } from 'src/app/models/movies';
 import { MoviesService } from '../../services/movies.service';
 
 @Component({
@@ -8,7 +8,7 @@ import { MoviesService } from '../../services/movies.service';
   styleUrls: ['./home.component.css'],
 })
 export class HomeComponent implements OnInit {
-  movies: Array<movies>;
+  movies: Array<Movie>;
 
   constructor(private movieService: MoviesService) {}
 
@@ -17,7 +17,7 @@ export class HomeComponent implements OnInit {
   }
 
   getMovies() {
-    this.movieService.getTrending().subscribe((res: any) => {
+    this.movieService.getAllMovieData().subscribe((res: any) => {
       this.movies = res;
     });
   }

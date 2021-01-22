@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { movies } from 'src/app/models/movies';
+import { Movie, movies } from 'src/app/models/movies';
 import { MoviesService } from 'src/app/services/movies.service';
 import { environment } from 'src/environments/environment';
 
@@ -9,9 +9,7 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./movie-card.component.css'],
 })
 export class MovieCardComponent implements OnInit {
-  @Input('data') movieData: movies;
-
-  imageUrl: string = environment.posterUrl;
+  @Input('data') movieData: Movie;
 
   constructor() {}
 

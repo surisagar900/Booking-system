@@ -2,32 +2,59 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { catchError, map } from 'rxjs/operators';
-import { throwError } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
+import { AuthService } from './auth.service';
+import { Movie } from '../models/movies';
 
 @Injectable({
   providedIn: 'root',
 })
 export class MoviesService {
-  movieUrl = environment.moviesUrl;
-  movieApiUrl = environment.movieApi;
-
-  private configUrl = environment.serverUrl;
+  private configURL = environment.serverUrl;
 
   constructor(private http: HttpClient) {}
 
-  getTrending() {
+  getAllMovieData(): Observable<Movie[]> {
     return this.http
-      .get<any>(this.movieUrl + 'trending/movie/week' + this.movieApiUrl)
-      .pipe(map((it) => it.results));
+      .get<Movie[]>(this.configURL + 'movie')
+      .pipe(catchError(this.handleErrors));
   }
 
-  getMovieById(id: number) {
-    return this.http.get<any>(this.movieUrl + `movie/${id}` + this.movieApiUrl);
+  getMovieData(movieId: number): Observable<Movie> {
+    return this.http
+      .get<Movie>(this.configURL + 'movie/' + movieId)
+      .pipe(catchError(this.handleErrors));
   }
 
-  addMovie(addMovie: any) {
+  editMovieData(movieResponse: any): Observable<any> {
+    let formData = new FormData();
+    formData.append('movieName', movieResponse.movieName + '');
+    formData.append('movieDesc', movieResponse.movieDesc + '');
+    formData.append('moviePrice', movieResponse.moviePrice + '');
+    formData.append('movieRating', movieResponse.movieRating + '');
+    formData.append('moviePoster', movieResponse.moviePoster + '');
+    formData.append('movieImg', movieResponse.movieImg);
     return this.http
-      .post(this.configUrl, addMovie)
+      .put<any>(this.configURL + 'movie/' + movieResponse.movieId, formData)
+      .pipe(catchError(this.handleErrors));
+  }
+
+  addMovieData(movieResponse: any): Observable<any> {
+    let formData = new FormData();
+    formData.append('movieName', movieResponse.movieName + '');
+    formData.append('movieDesc', movieResponse.movieDesc + '');
+    formData.append('moviePrice', movieResponse.moviePrice + '');
+    formData.append('movieRating', movieResponse.movieRating + '');
+    formData.append('moviePoster', movieResponse.moviePoster + '');
+    formData.append('movieImg', movieResponse.movieImg);
+    return this.http
+      .post<any>(this.configURL + 'movie', formData)
+      .pipe(catchError(this.handleErrors));
+  }
+
+  deleteMovieData(movieId: number): Observable<any> {
+    return this.http
+      .delete<any>(this.configURL + 'movie/' + movieId)
       .pipe(catchError(this.handleErrors));
   }
 
@@ -36,20 +63,6 @@ export class MoviesService {
     if (errRes.error.errors) {
       return throwError(errorMessage);
     }
-    switch (errRes.error.message) {
-      case 'NO_MOVIES':
-        errorMessage = 'No any movies yet';
-        break;
-      case 'MOVIE_ALREADY_EXIST':
-        errorMessage = 'movie already exist';
-        break;
-      case 'MOVIE_NOT_EXIST':
-        errorMessage = 'movie not exist';
-        break;
-      case 'MOVIENAME_OCCUPIED':
-        errorMessage = 'movie occupied';
-        break;
-    }
-    return throwError(errorMessage);
+    return throwError(errRes.error.message);
   }
 }

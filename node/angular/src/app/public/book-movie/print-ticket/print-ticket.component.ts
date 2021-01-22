@@ -8,14 +8,20 @@ import html2canvas from 'html2canvas';
   styleUrls: ['./print-ticket.component.css'],
 })
 export class PrintTicketComponent implements OnInit {
-  @Input() movieData: any;
+  @Input() movieData: {
+    seat: string[];
+    title: string;
+    tagline: string;
+    price: number;
+  };
+
+  cost: number;
 
   constructor() {}
   ngOnInit(): void {}
 
   generatePDF() {
     var data = document.getElementById('contentToConvert');
-    debugger;
     html2canvas(data).then((canvas) => {
       var imgWidth = 208;
       var imgHeight = (canvas.height * imgWidth) / canvas.width;

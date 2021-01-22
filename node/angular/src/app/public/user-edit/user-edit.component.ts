@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
+import { LoaderService } from 'src/app/services/loader.service';
+import { UsersService } from 'src/app/services/users.service';
 
 @Component({
   selector: 'app-user-edit',
@@ -11,9 +13,11 @@ import { AuthService } from 'src/app/services/auth.service';
 })
 export class UserEditComponent implements OnInit {
   constructor(
-    private authService: AuthService,
+    private userService: UsersService,
+    private loader: LoaderService,
     private fb: FormBuilder,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {}
 
   loading: boolean = false;
@@ -24,10 +28,25 @@ export class UserEditComponent implements OnInit {
   registerSub: Subscription;
 
   ngOnInit(): void {
+    this.userService.getUserData().subscribe((res) => {
+      this.loading = true;
+      this.initiateForm();
+      this.RegisterForm.patchValue({
+        id: res.id,
+        username: res.username,
+        firstname: res.firstname,
+        lastname: res.lastname,
+        email: res.email,
+        phone: res.phone,
+      });
+    });
+  }
+
+  initiateForm() {
     this.RegisterForm = this.fb.group({
       id: [0],
       username: [
-        null,
+        { value: null, disabled: true },
         [
           Validators.required,
           Validators.minLength(6),
@@ -91,21 +110,23 @@ export class UserEditComponent implements OnInit {
     this.loading = true;
     this.RegisterForm.disable();
 
-    this.registerSub = this.authService
-      .register(this.RegisterForm.value)
+    this.loader.showLoader(true);
+
+    this.registerSub = this.userService
+      .editUserData(this.RegisterForm.getRawValue())
       .subscribe(
         () => {
-          this.loading = false;
+          this.loader.showLoader(false);
           this.RegisterForm.enable();
           this.errors = '';
           this.RegisterForm.reset();
         },
         (err) => {
-          this.loading = false;
+          this.loader.showLoader(false);
           this.errors = err;
           this.RegisterForm.enable();
         },
-        () => this.router.navigate(['/'])
+        () => this.router.navigate(['../'], { relativeTo: this.route })
       );
   }
 }

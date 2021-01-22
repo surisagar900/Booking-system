@@ -1,8 +1,9 @@
 <app-print-ticket
   [movieData]="{
-    seat: selectedSeats.join(', '),
-    title: movie.title,
-    tagline: movie.tagline
+    seat: selectedSeats,
+    title: movie.movieName,
+    tagline: movie.movieDesc,
+    price: movie.moviePrice
   }"
   *ngIf="isTicketBooked; else bookTicket"
 ></app-print-ticket>
@@ -13,22 +14,19 @@
       <div class="card">
         <div
           class="background"
-          [style.background-image]="'url(' + imageUrl + movie.poster_path + ')'"
+          [style.background-image]="
+            'url(/assets/uploads/' + movie.movieImg + ')'
+          "
         ></div>
         <div class="card-header">
-          <h1>{{ movie.title | titlecase }}</h1>
-          <h3>{{ movie.tagline }}</h3>
+          <h1>{{ movie.movieName | titlecase }}</h1>
+          <h3>{{ movie.movieDesc }}</h3>
         </div>
         <div class="card-body">
           <blockquote class="blockquote mb-0">
-            <p>
-              {{ movie.overview }}
-            </p>
             <footer class="blockquote-footer">
-              {{ movie.Released }} on
-              <cite title="Source Title">{{
-                movie.release_date | date: "dd MMM, yyyy"
-              }}</cite>
+              {{ movie.moviePrice | currency: "INR" }} on
+              <cite title="Source Title">{{ movie.movieRating }}</cite>
             </footer>
           </blockquote>
         </div>
@@ -48,6 +46,7 @@
                   class="seat-button"
                   (click)="selectSeat(col, row)"
                   [ngClass]="{ selected: checkSelectedSeat(col + row) }"
+                  [disabled]="checkBookedSeat(col + row)"
                 >
                   <p>
                     <mat-icon>event_seat</mat-icon><br />

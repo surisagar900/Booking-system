@@ -8,3 +8,13 @@ export interface movies {
   release_date: string;
   media_type: string;
 }
+
+export interface Movie {
+  movieId: number;
+  movieName: string;
+  movieDesc: string;
+  moviePoster: string;
+  movieRating: number;
+  moviePrice: number;
+  movieImg: string;
+}

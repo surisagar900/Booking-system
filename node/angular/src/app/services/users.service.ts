@@ -24,6 +24,15 @@ export class UsersService {
       .pipe(catchError(this.handleErrors));
   }
 
+  addAdmin(username: string, password: string): Observable<any> {
+    return this.http
+      .post<any>(this.configURL + 'adminsignup', {
+        username: username,
+        password: password,
+      })
+      .pipe(catchError(this.handleErrors));
+  }
+
   getUserData(): Observable<User> {
     let userId: number;
     if (this.localData) userId = this.localData.id;
@@ -34,7 +43,6 @@ export class UsersService {
 
   editUserData(userEditData): Observable<any> {
     let userId: number;
-    this.localData = JSON.parse(localStorage.getItem('LoggedInUserData'));
     if (this.localData) userId = this.localData.id;
     return this.http
       .put<any>(this.configURL + 'user/' + userId, userEditData)
@@ -43,7 +51,6 @@ export class UsersService {
 
   deleteUserData(): Observable<any> {
     let userId: number;
-    this.localData = JSON.parse(localStorage.getItem('LoggedInUserData'));
     if (this.localData) userId = this.localData.id;
     return this.http
       .delete<any>(this.configURL + 'user/' + userId)
@@ -55,20 +62,6 @@ export class UsersService {
     if (errRes.error.errors) {
       return throwError(errorMessage);
     }
-    switch (errRes.error.message) {
-      case 'NO_USERS':
-        errorMessage = 'No any users yet';
-        break;
-      case 'USER_ALREADY_EXIST':
-        errorMessage = 'User already exist';
-        break;
-      case 'USER_NOT_EXIST':
-        errorMessage = 'User not exist';
-        break;
-      case 'USERNAME_OCCUPIED':
-        errorMessage = 'User occupied';
-        break;
-    }
-    return throwError(errorMessage);
+    return throwError(errRes.error.message);
   }
 }
